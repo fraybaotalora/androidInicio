@@ -7,12 +7,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import aplicacion.primera.co.com.mi_primera_aplicacion.DTO.Saludo;
 import aplicacion.primera.co.com.mi_primera_aplicacion.Response.GreetingResponse;
 import aplicacion.primera.co.com.mi_primera_aplicacion.service.UsuarioService;
+import aplicacion.primera.co.com.mi_primera_aplicacion.util.Preferencia;
 import aplicacion.primera.co.com.mi_primera_aplicacion.util.RetrofitAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -21,42 +20,49 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity{
 
     private UsuarioService usuarioService;
+    private Preferencia preferencia;
+    private String nombreB;
+    private String contrasenaB;
+
     EditText nombre;
     EditText usuario;
-
     Button ingresar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        preferencia= new Preferencia();
         usuarioService= RetrofitAdapter.getRetrofit().create(UsuarioService.class);
+        nombreB= preferencia.leerValor(this,"user");
 
+        if(nombreB.isEmpty()) {
 
-        nombre = (EditText) findViewById(R.id.nombre);
-        usuario = (EditText) findViewById(R.id.usuario);
-        ingresar = (Button) findViewById(R.id.ingresar);
+             nombre = (EditText) findViewById(R.id.nombre);
+             usuario = (EditText) findViewById(R.id.usuario);
+             ingresar = (Button) findViewById(R.id.ingresar);
 
-        ingresar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String nombreB = nombre.getText().toString();
-                String usuarioB = usuario.getText().toString();
+             ingresar.setOnClickListener(new View.OnClickListener() {
+                 @Override
+                 public void onClick(View view) {
+                     nombreB = nombre.getText().toString();
+                     contrasenaB = usuario.getText().toString();
 
-                if (nombreB.isEmpty() || usuarioB.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "El nombre y el usuario son obligatorios", Toast.LENGTH_SHORT).show();
-                } else {
+                     if (nombreB.isEmpty() || contrasenaB.isEmpty()) {
+                         Toast.makeText(getApplicationContext(), "El nombre y el usuario son obligatorios", Toast.LENGTH_SHORT).show();
+                     } else {
 
-                    Log.i("DATOS DE INTERFAZ", "onClick: Nombre: "+nombreB+" -- Usuario: "+usuarioB);
-                    obtenerSaludo();
+                         Log.i("DATOS DE INTERFAZ", "onClick: Nombre: " + nombreB + " -- Usuario: " + contrasenaB);
+                         obtenerSaludo();
+                     }
 
+                 }
+             });
+         }
+         else{
 
-                }
-
-            }
-        });
-
+             loginAutomatico();
+         }
     }
 
 
@@ -74,6 +80,9 @@ public class MainActivity extends AppCompatActivity{
                     Log.i("obtenerSaludo", "Response: " + response.body());
 
                     GreetingResponse s= response.body();
+                    preferencia.guardarValor(MainActivity.this, "user",s.getId());
+                    preferencia.guardarValor(MainActivity.this, "contrasena",s.getContent());
+
                     Intent intent = new Intent(MainActivity.this, SecondActivity.class);
                     intent.putExtra("id", s.getId());
                     intent.putExtra("context", s.getContent());
@@ -91,6 +100,20 @@ public class MainActivity extends AppCompatActivity{
             }
         });
     }
+
+
+    public void loginAutomatico(){
+
+        Log.i("Login automatico", "Datos: " + nombreB);
+        Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+        intent.putExtra("id", nombreB);
+        intent.putExtra("context",preferencia.leerValor(this,"contrasena"));
+        startActivity(intent);
+
+
+    }
+
+
 
 
 }
