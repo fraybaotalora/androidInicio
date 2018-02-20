@@ -3,6 +3,7 @@
     <string name="saludo">Hola, estoy aprendiendo</string>
     <string name="ingresar">Ingresar</string>
     <string name="title_activity_login">Sign in</string>
+    <string name="hola_mundo">Hola Mundo</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>

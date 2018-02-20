@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="aplicacion.primera.co.com.mi_primera_aplicacion.SecondActivity"
+    >
+
+
+<TextView
+    android:id="@+id/label_nombre"
+    android:layout_width="100dp"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:text="Id:"
+
+/>
+
+    <EditText
+        android:id="@+id/id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="90dp"
+        app:layout_constraintLeft_toLeftOf="@id/label_nombre"
+
+        />
+
+    <TextView
+        android:id="@+id/label_usuario"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="Conext:"
+        app:layout_constraintTop_toTopOf="@id/label_nombre"
+        android:layout_marginTop="60dp"
+
+
+        />
+
+    <EditText
+        android:id="@+id/context"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="90dp"
+        app:layout_constraintLeft_toLeftOf="@id/label_usuario"
+        app:layout_constraintTop_toTopOf="@id/label_usuario"
+
+        />
+
+
+
+
+
+
+
+</android.support.constraint.ConstraintLayout>
