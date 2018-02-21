@@ -10,6 +10,7 @@ import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -27,8 +29,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private Marker marcador;
+    private Location myLocation;
     double latitud = 0.0;
     double longitud = 0.0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +44,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
     }
-
 
 
     /**
@@ -55,7 +58,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            return;
+        }
+        mMap.setMyLocationEnabled(true);
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(0, 0),16));
         miUbicacion();
+
+
+        agregarMarcador(6.256027, -75.578504);
+        agregarMarcador(6.255543, -75.580561);
+        agregarMarcador(6.254502, -75.581987);
+
 
     }
 
@@ -91,23 +107,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        actualizarUbicacion(location);
+        myLocation= locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        actualizarUbicacion(myLocation);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,2000,0,locListener);
+
     }
+
+
 
     public void agregarMarcador(double lat, double lon) {
 
-        LatLng coordenadas = new LatLng(lat, lon);
-        //CameraUpdate miUbicacion = CameraUpdateFactory.newLatLngZoom(coordenadas, 16);
-        if (marcador != null) marcador.remove();
+        Marker marker= mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(lat, lon))
+                .title("Barberia Olimpo")
+                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher))
+                .snippet("Distancia: " + (((int) calcularDistancia(lat, lon))+" metros"))
+        );
 
-        marcador = mMap.addMarker(new MarkerOptions()
-                .position(coordenadas)
-                .title("prueba de mi ubicacion")
-                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
-
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordenadas,16));
 
 
     }
@@ -115,10 +131,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void actualizarUbicacion(Location loc) {
         if (loc != null) {
+
             latitud = loc.getLatitude();
             longitud = loc.getLongitude();
-            agregarMarcador(latitud, longitud);
+            Log.i("","Coordenadas mi posicion latitud: "+latitud+" longitu: "+longitud);
+            LatLng coordenadas = new LatLng(latitud, longitud);
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(coordenadas));
         }
+    }
+
+    public float calcularDistancia(double lat, double lon){
+        Location locationB = new Location("punto B");
+
+        locationB.setLatitude(lat);
+        locationB.setLongitude(lon);
+        return  myLocation.distanceTo(locationB);
     }
 
 }
