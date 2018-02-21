@@ -25,7 +25,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
     private GoogleMap mMap;
     private Marker marcador;
@@ -72,6 +72,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         agregarMarcador(6.255543, -75.580561);
         agregarMarcador(6.254502, -75.581987);
 
+        mMap.setOnInfoWindowClickListener(this);
 
     }
 
@@ -100,6 +101,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     };
 
+
+
+
+
     private void miUbicacion() {
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -121,9 +126,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .position(new LatLng(lat, lon))
                 .title("Barberia Olimpo")
                 .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher))
-                .snippet("Distancia: " + (((int) calcularDistancia(lat, lon))+" metros"))
         );
 
+        onInfoWindowClick(marker);
 
 
     }
@@ -148,4 +153,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return  myLocation.distanceTo(locationB);
     }
 
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        marker.setSnippet("Se encuentra a: " + (((int) calcularDistancia(marker.getPosition().latitude,marker.getPosition().longitude))+" metros"));
+
+    }
 }
