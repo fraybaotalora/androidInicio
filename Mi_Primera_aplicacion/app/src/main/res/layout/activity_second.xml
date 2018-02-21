@@ -8,33 +8,13 @@
     >
 
 
-<TextView
-    android:id="@+id/label_nombre"
-    android:layout_width="100dp"
-    android:layout_height="wrap_content"
-    android:gravity="center_horizontal"
-    android:text="Id:"
 
-/>
 
     <EditText
         android:id="@+id/id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="90dp"
-        app:layout_constraintLeft_toLeftOf="@id/label_nombre"
-
-        />
-
-    <TextView
-        android:id="@+id/label_usuario"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="Conext:"
-        app:layout_constraintTop_toTopOf="@id/label_nombre"
-        android:layout_marginTop="60dp"
-
+        android:hint="Usuario"
 
         />
 
@@ -42,11 +22,24 @@
         android:id="@+id/context"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="90dp"
-        app:layout_constraintLeft_toLeftOf="@id/label_usuario"
-        app:layout_constraintTop_toTopOf="@id/label_usuario"
-
+        android:layout_marginTop="90dp"
+        android:hint="Contraseña"
+        app:layout_constraintTop_toTopOf="@id/id"
         />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="100dp"
+        android:spinnerMode="dialog"
+        android:entries= "@array/prueba_Spinner"
+        app:layout_constraintTop_toTopOf="@id/context">
+
+       </Spinner>
+
+
 
 
 
