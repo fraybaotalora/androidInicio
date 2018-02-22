@@ -63,16 +63,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
         mMap.setMyLocationEnabled(true);
-
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(0, 0),16));
         miUbicacion();
-
 
         agregarMarcador(6.256027, -75.578504);
         agregarMarcador(6.255543, -75.580561);
         agregarMarcador(6.254502, -75.581987);
 
         mMap.setOnInfoWindowClickListener(this);
+
 
     }
 
@@ -114,7 +113,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         myLocation= locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         actualizarUbicacion(myLocation);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,2000,0,locListener);
+
 
     }
 
@@ -127,7 +126,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .title("Barberia Olimpo")
                 .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher))
         );
-
         onInfoWindowClick(marker);
 
 
@@ -136,26 +134,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void actualizarUbicacion(Location loc) {
         if (loc != null) {
-
             latitud = loc.getLatitude();
             longitud = loc.getLongitude();
-            Log.i("","Coordenadas mi posicion latitud: "+latitud+" longitu: "+longitud);
+            Log.i("","Coordenadas mi posicion latitud: "+latitud+" longitud: "+longitud);
             LatLng coordenadas = new LatLng(latitud, longitud);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(coordenadas));
         }
     }
 
     public float calcularDistancia(double lat, double lon){
-        Location locationB = new Location("punto B");
+        myLocation.setLatitude(latitud);
+        myLocation.setLongitude(longitud);
 
+        Location locationB = new Location("punto B");
         locationB.setLatitude(lat);
         locationB.setLongitude(lon);
+
         return  myLocation.distanceTo(locationB);
     }
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        marker.setSnippet("Se encuentra a: " + (((int) calcularDistancia(marker.getPosition().latitude,marker.getPosition().longitude))+" metros"));
+        marker.setSnippet("Distancia: " + (((int) calcularDistancia(marker.getPosition().latitude,marker.getPosition().longitude))+" metros"));
 
     }
 }
